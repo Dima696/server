@@ -9,33 +9,26 @@ public class Main {
 
     try {
             try {
-
-                var clientSocket = new Socket("localhost", 31);
-
-                var reader = new BufferedReader(new InputStreamReader(System.in));
-
-                System.out.println("Server access allowed!" + "\n" + "Enter your name?");
-
-                var in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                var out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-
-                String word = reader.readLine();
-                out.write(word + "\n");
-                out.flush();
-                String serverWord = in.readLine();
-                System.out.println(serverWord);
-            } catch (NullPointerException e) {
-                System.out.println(e + "Client closed...");
-                clientSocket.close();
-                in.close();
-                out.close();
-                System.out.println(e);
+                ServerSocket serverSocket = new ServerSocket(31);
+                System.out.println("Server started !");
+                Socket clientSocket = serverSocket.accept();
+                try {
+                    var out = new PrintWriter(clientSocket.getOutputStream(), true);
+                    var in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    String name = in.readLine();
+                    out.flush();
+                    out.println(String.format("Hi %s, your port is %d", name, clientSocket.getPort()));
+                } finally {
+                    clientSocket.close();
+                    in.close();
+                    out.close();
+                }
+            } finally {
+                System.out.println("Server closed...!");
+                serverSocket.close();
             }
         } catch (IOException e) {
-            System.err.println(e);
+            System.out.println(e);
         }
-
-
     }
 }
-
