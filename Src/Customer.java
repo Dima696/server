@@ -1,36 +1,38 @@
 import java.io.*;
 import java.net.Socket;
 
+
 public class Customer {
-try {
-            try {
+    private static Socket clientSocket;
+    private static BufferedReader in;
+    private static BufferedWriter out;
+    private static BufferedReader reader;
 
-                var clientSocket = new Socket("localhost", 31);
+    public static void main ( String[] args ) throws NullPointerException, IOException {
+        try {
 
-                var reader = new BufferedReader(new InputStreamReader(System.in));
+            var clientSocket = new Socket("localhost", 31);
 
-                System.out.println("Server access allowed!" + "\n" + "Enter your name?");
+            var reader = new BufferedReader(new InputStreamReader(System.in));
 
-                var in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                var out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            System.out.println("Server access allowed!" + "\n" + "Enter your name?");
 
-                String word = reader.readLine();
-                out.write(word + "\n");
-                out.flush();
-                String serverWord = in.readLine();
-                System.out.println(serverWord);
-            } catch (NullPointerException e) {
-                System.out.println(e + "Client closed...");
-                clientSocket.close();
-                in.close();
-                out.close();
-                System.out.println(e);
-            }
-        } catch (IOException e) {
-            System.err.println(e);
+            var in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            var out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+
+            String word = reader.readLine();
+            out.write(word + "\n");
+            out.flush();
+            String serverWord = in.readLine();
+            System.out.println(serverWord);
+
+        } finally {
+            clientSocket.close();
+            in.close();
+            out.close();
+
         }
-
-
     }
 }
+
 
