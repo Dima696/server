@@ -14,27 +14,23 @@ public class Main {
 
     public static void main ( String[] args ) throws IOException {
 
-        try {
-            ServerSocket serverSocket = new ServerSocket(31);
+       try (ServerSocket serverSocket = new ServerSocket(31);
+             Socket clientSocket = serverSocket.accept();
+             var out = new PrintWriter(clientSocket.getOutputStream(), true);
+             var in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
             System.out.println("Server started !");
-            Socket clientSocket = serverSocket.accept();
 
-            var out = new PrintWriter(clientSocket.getOutputStream(), true);
-            var in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String name = in.readLine();
             out.flush();
             out.println(String.format("Hi %s, your port is %d", name, clientSocket.getPort()));
-//                    clientSocket.close();
-//                    in.close();
-//                    out.close();
 
-        } finally {
-            clientSocket.close();
-            in.close();
-            out.close();
-            System.out.println("Server closed...!");
-            serverSocket.close();
         }
+//        clientSocket.close();
+//        in.close();
+//        out.close();
+//        System.out.println("Server closed...!");
+//        serverSocket.close();
     }
 }
+
 
